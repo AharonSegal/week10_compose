@@ -1,13 +1,9 @@
 from fastapi import FastAPI
-from routers import input, view, utils
+from routers import contacts, utils
 
-app = FastAPI(title="Supermarket API")
+app = FastAPI(title="Contacts Manager")
 
 # -------------------- Routers --------------------
 app.include_router(utils.router)
-app.include_router(input.router)
-app.include_router(view.router)
+app.include_router(contacts.router)
 
-
-if __name__ == "__main__":
-    print("Run the program here!")

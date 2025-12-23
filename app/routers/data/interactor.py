@@ -1,22 +1,25 @@
+import mysql.connector
+from mysql.connector import Error
 import os
-from sqlmodel import create_engine, Session
 
 DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_PORT = os.getenv("DB_PORT", "3306")
+DB_PORT = int(os.getenv("DB_PORT", 3306))
 DB_USER = os.getenv("DB_USER", "root")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "")
-DB_NAME = os.getenv("DB_NAME", "")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "password")
+DB_NAME = os.getenv("DB_NAME", "contacts_db")
 
 DATABASE_URL = (
     f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}"
     f"@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
 
-engine = create_engine(
-    DATABASE_URL,
-    echo=True
-)
+def get_connection():
+    """Return a MySQL connection"""
+    return mysql.connector.connect(
+        host=DB_HOST,
+        port=DB_PORT,
+        user=DB_USER,
+        password=DB_PASSWORD,
+        database=DB_NAME
+    )
 
-def get_session():
-    with Session(engine) as session:
-        yield session
