@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  # -------------------- FastAPI Backend --------------------
+  api:
+    build: ./api
+    container_name: backend_api
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_USER: appuser
+      DB_PASSWORD: apppass
+      DB_NAME: mydb
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  # -------------------- MySQL Database --------------------
+  database:
+    image: mysql:8
+    container_name: mysql_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:

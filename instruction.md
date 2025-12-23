@@ -148,10 +148,12 @@ You must implement the following:
 
 2. **CRUD Functions**  
    - `create_contact(first_name, last_name, phone_number)` → returns new contact ID (queried from DB)  
-   - `get_all_contacts()` → returns list of Contact objects  
-   - `update_contact(id, ...)` → returns success boolean  
-   - `delete_contact(id)` → returns success boolean
-
+   - `get_all_contacts()` 
+   → returns list of Contact objects  
+   - `update_contact(id, ...)` 
+   → returns success boolean  
+   - `delete_contact(id)` 
+   → returns success boolean
    
 
 3. **Database Module**  
@@ -175,7 +177,21 @@ You must implement the following:
    - Expose port 8000  
    - Run uvicorn server
 
-   
+<!-- 
+
+ /$$           /$$       /$$          
+| $$          | $$      | $$          
+| $$  /$$$$$$ | $$$$$$$ | $$  /$$$$$$ 
+| $$ |____  $$| $$__  $$| $$ /$$__  $$
+| $$  /$$$$$$$| $$  \ $$| $$| $$$$$$$$
+| $$ /$$__  $$| $$  | $$| $$| $$_____/
+| $$|  $$$$$$$| $$$$$$$/| $$|  $$$$$$$
+|__/ \_______/|_______/ |__/ \_______/
+                                      
+                                      
+                                      
+                                       -->
+                                      
 
 2. **Docker Compose File** (`compose.yaml`)  
    - Define two services: `db` and `api`  
