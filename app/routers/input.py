@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
-from db.database import get_session
-from db.models import Contact
+from data.interactor import get_session
+from data.models import Contact
 
 
 
-router = APIRouter(prefix="/contacts", tags=["Contacts"], status_code=201)
+router = APIRouter(prefix="/contacts", tags=["Contacts"])
 
 """create contact
     gets:
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/contacts", tags=["Contacts"], status_code=201)
         inserts to the db
         returns new contact ID (queried from DB) 
 """
-@router.post("/", response_model=Contact)
+@router.post("/", response_model=Contact, status_code=201)
 def create_contact(
     contact: Contact,
     session: Session = Depends(get_session)

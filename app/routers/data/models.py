@@ -1,7 +1,6 @@
 from sqlmodel import SQLModel, Field
 from typing import Optional
 
-
 class Contact(SQLModel, table=True):
     __tablename__ = "contacts"
 
