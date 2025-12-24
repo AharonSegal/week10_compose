@@ -11,14 +11,18 @@
 git init
 python -m venv venv
 source venv/Scripts/activate
+source ../venv/Scripts/activate
 python.exe -m pip install --upgrade pip
 
 pip install fastapi uvicorn pydantic
 pip install requests
+pip install --upgrade mysql-connector-python
 
 python -c "import fastapi; print(fastapi.__version__)"
 python -c "import uvicorn; print(uvicorn.__version__)"
 python -c "import requests; print(requests.__version__)"
+python -c "import mysql.connector; print(mysql.connector.__version__)"
+
 
 pip freeze > requirements.txt
 git add .  
@@ -26,10 +30,10 @@ git commit -m "initial commit"
 git push -u origin main
 
 uvicorn main:app --reload
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8090
 
+http://127.0.0.1:8000/docs#/
 ```
-
-http://127.0.0.1:8000/docs
 
 <!-- 
 ██████   ██████   ██████ ██   ██ ███████ ██████              
@@ -652,19 +656,30 @@ docker system prune -a
 
 #!/bin/bash
 
+#!/bin/bash
+
 echo "Stopping all running containers..."
-docker stop $(docker ps -q) 2>/dev/null
+docker stop $(docker ps -q) 2>/dev/null || true
 
 echo "Removing all containers..."
-docker rm $(docker ps -a -q) 2>/dev/null
+docker rm $(docker ps -a -q) 2>/dev/null || true
 
 echo "Removing all images..."
-docker rmi -f $(docker images -q) 2>/dev/null
+docker rmi -f $(docker images -q) 2>/dev/null || true
 
 echo "Removing all volumes..."
-docker volume rm $(docker volume ls -q) 2>/dev/null
+# Remove volumes only if they exist
+volumes=$(docker volume ls -q)
+if [ ! -z "$volumes" ]; then
+  docker volume rm $volumes 2>/dev/null || true
+fi
 
-echo "Removing all networks (optional)..."
-docker network rm $(docker network ls -q | grep -v "bridge\|host\|none") 2>/dev/null
+echo "Removing all custom networks..."
+# Keep default networks (bridge, host, none)
+networks=$(docker network ls -q | grep -v -E "bridge|host|none")
+if [ ! -z "$networks" ]; then
+  docker network rm $networks 2>/dev/null || true
+fi
 
 echo "Full Docker cleanup complete!"
+docker system prune -af --volumes

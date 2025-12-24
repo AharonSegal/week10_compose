@@ -2,40 +2,34 @@ version: "3.8"
 
 services:
   # -------------------- FastAPI Backend --------------------
-  app:
-    build: ./app
-    container_name: backend_api
-    restart: unless-stopped
-    ports:
-      - "8080:80"
-    environment:
-      DB_HOST: database       
-      DB_PORT: 3306
-      DB_USER: root           
-      DB_PASSWORD: password   
-      DB_NAME: contacts_db    
-    depends_on:
-      database:
-        condition: service_healthy
-    networks:
-      - app-network
+  # app:
+  #   build: ./app
+  #   container_name: backend_api
+  #   restart: unless-stopped
+  #   ports:
+  #     - "8080:80"
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     database:
+  #       condition: service_healthy
+  #   networks:
+  #     - app-network
 
   # -------------------- MySQL Database --------------------
+  # db only docker compose up -d database
   database:
     image: mysql:8
     container_name: mysql_db
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: password   # matches db.py DB_PASSWORD
-      MYSQL_DATABASE: contacts_db     # matches db.py DB_NAME
+      MYSQL_ROOT_PASSWORD: ${ROOT_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - .\app\sql\init.sql:/docker-entrypoint-initdb.d/init.sql:ro 
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - ./app/sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
       - app-network
 

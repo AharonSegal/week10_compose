@@ -197,7 +197,7 @@ You must implement the following:
    - Base image: Python 3.11-slim  
    - Install dependencies from requirements.txt  
    - Copy application code  
-   - Expose port 8000  
+   - Expose port 8080  
    - Run uvicorn server
 
                                       
@@ -209,7 +209,7 @@ You must implement the following:
    - Named volume for MySQL data persistence  
    - Mount `init.sql` to initialize database  
    - API depends on database service  
-   - Expose API on ports 8000:80
+   - Expose API on ports 8080:80
 
    
 
@@ -296,7 +296,7 @@ You must test and verify:
 1. **Container Startup**  
      
    - Both containers start without errors  
-   - API is accessible on port 8000  
+   - API is accessible on port 8080  
    - Database initializes with sample data
 
    
@@ -378,11 +378,11 @@ sleep 30
 
 **\# 4\. Test GET all contacts**
 
-curl http://localhost:8000/contacts
+curl http://localhost:8080/contacts
 
 **\# 5\. Test CREATE contact**
 
-curl \-X POST http://localhost:8000/contacts \\
+curl \-X POST http://localhost:8080/contacts \\
 
   \-H "Content-Type: application/json" \\
 
@@ -390,7 +390,7 @@ curl \-X POST http://localhost:8000/contacts \\
 
 **\# 6\. Test UPDATE contact (use actual ID from previous response)**
 
-curl \-X PUT http://localhost:8000/contacts/4 \\
+curl \-X PUT http://localhost:8080/contacts/4 \\
 
   \-H "Content-Type: application/json" \\
 
@@ -398,7 +398,7 @@ curl \-X PUT http://localhost:8000/contacts/4 \\
 
 **\# 7\. Test DELETE contact**
 
-curl \-X DELETE http://localhost:8000/contacts/4
+curl \-X DELETE http://localhost:8080/contacts/4
 
 **\# 8\. Test data persistence**
 
@@ -408,7 +408,7 @@ docker compose up \-d
 
 sleep 30
 
-curl http://localhost:8000/contacts  \# Should show original contacts
+curl http://localhost:8080/contacts  \# Should show original contacts
 
 **\# 9\. Clean up**
 

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
-from data.interactor import get_connection
+# from data.interactor import get_connection
 
 router = APIRouter(prefix="/contacts", tags=["Contacts"])
 
