@@ -16,24 +16,5 @@
 
 git commit -m"MAJOR STEP: backend and db connected - backend running locally with db volume -db test route working - contact endpoint schemas and skeletons are ready"
 git commit -m"Major step: backend enpoints working and connected to the db using env"
+git commit -m"all works"
 
-
-"""
-for prod 
-
-def get_connection():
-    return mysql.connector.connect(
-        host="database",    # MySQL service name from docker-compose.
-                            # Docker DNS resolves "database" to the MySQL container.
-
-        port=3306,          # MySQL's internal port inside the Docker network.
-                            # You do NOT use 3307 here; 3307 is only for the host.
-
-        user=DB_USER,        # Same user, root, unless you configure MYSQL_USER.
-
-        password=ROOT_PASS, # Same env var, passed into the app container
-                            # via env_file or environment in docker-compose.
-
-        database=DB_NAME    # Same DB name, again from env var (contacts_db).
-    )
-    """
