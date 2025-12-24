@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from mysql.connector import Error as MySQLError
-from app.data.db_use import get_connection
+from data.db_use import get_connection
 
 router = APIRouter(prefix="/test",tags=["DB Test"])
 

@@ -2,7 +2,7 @@
 
 .gitignore
 README.md
-app/ [subfolders: 3, files: 4, total files: 17]
+app/ [subfolders: 3, files: 4, total files: 16]
     Dockerfile
     __init__.py
     data/ [subfolders: 0, files: 2, total files: 2]
@@ -10,7 +10,7 @@ app/ [subfolders: 3, files: 4, total files: 17]
         db_use.py
     main.py
     requirements.txt
-    routers/ [subfolders: 1, files: 4, total files: 10]
+    routers/ [subfolders: 1, files: 3, total files: 9]
         __init__.py
         __pycache__/ [subfolders: 0, files: 6, total files: 6]
             input.cpython-311.pyc
@@ -21,63 +21,71 @@ app/ [subfolders: 3, files: 4, total files: 17]
             view.cpython-314.pyc
         contacts.py
         db_test.py
-        utils.py
     sql/ [subfolders: 0, files: 1, total files: 1]
         init.sql
 docker-compose.yml
-docs/ [subfolders: 0, files: 7, total files: 7]
+docs/ [subfolders: 0, files: 8, total files: 8]
+    Commands.md
     arcs.md
     docker_commands.md
     docker_compose.md
     flow.md
     project_overview.py
-    test.py
+    sql_curtos.md
     text.txt
 instruction.md
+state.md
+test.py
+
+================= PROJECT STATS =================
+
 
 ⫘⫶⫘⫶⫘⫶⫘⫶⫘⫶⫘⫶⫘⫶⫘⫶⫘⫶⫘⫶⫘⫶⫘⫶⫘⫶
 
-env_file 
-DB_NAME=contacts_db
+DB_USER=root
 ROOT_PASS=pass
+DB_NAME=contacts_db
 
 ⫘⫶⫘⫶⫘⫶⫘⫶⫘⫶⫘⫶⫘⫶⫘⫶⫘⫶⫘⫶⫘⫶⫘⫶⫘⫶
-
-dockercompose
-start at this point only db and backend is local 
-
 version: "3.8"
 
 services:
-  # -------------------- FastAPI Backend --------------------
-  # app:
-  #   build: ./app
-  #   container_name: backend_api
-  #   restart: unless-stopped
-  #   ports:
-  #     - "8080:80"
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #     database:
-  #       condition: service_healthy
-  #   networks:
-  #     - app-network
-
   # -------------------- MySQL Database --------------------
-  # db only docker compose up -d database
-  database:
+  db:
     image: mysql:8
     container_name: mysql_db
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${ROOT_PASS}
-      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${ROOT_PASS}   
+      MYSQL_DATABASE: ${DB_NAME}          
     ports:
-      - "3307:3306"
+      - "3307:3306"                
     volumes:
-      - mysql_data:/var/lib/mysql
-      - ./app/sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - db_data:/var/lib/mysql
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${ROOT_PASS}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - app-network
+
+  # -------------------- FastAPI Backend --------------------
+  api:
+    build: ./app
+    container_name: contacts_api
+    restart: unless-stopped
+    environment:
+      ROOT_PASS: ${ROOT_PASS}       
+      DB_NAME: ${DB_NAME}
+      API_PORT: ${API_PORT}         
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:80"                   
     networks:
       - app-network
 
@@ -88,4 +96,4 @@ networks:
 
 # -------------------- Volumes --------------------
 volumes:
-  mysql_data:
+  db_data:

@@ -18,6 +18,7 @@ docker system df -v
 ```
 ### **2️⃣ Build / Start**
 ```bash
+docker-compose up
 docker-compose up -d --build
 
 uvicorn main:app --reload
@@ -55,6 +56,9 @@ echo "Full Docker cleanup complete!"
 docker system prune -af --volumes
 
 
+
+docker images
+docker rmi contact_manager-api
 ```
 <!-- 
  /$$   /$$                                            

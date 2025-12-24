@@ -31,7 +31,7 @@ git branch
 
 # Create a new branch
 git checkout -b title/branch_purpose
-git checkout -b backend/complete_local_version
+git checkout -b backend/containerize
 
 # Stage changes
 git add .
@@ -41,7 +41,6 @@ git commit -m "Descriptive commit message"
 
 # Push branch to remote
 git push -u origin title/branch_purpose
-git push -u origin backend/complete_local_version
 
 # Switch between branches
 git checkout main
@@ -51,6 +50,7 @@ git checkout title/branch_purpose
 git checkout main
 git pull                  # ensure main is up-to-date
 git merge title/branch_purpose
+git merge backend/complete_local_version
 
 # Delete branch (optional)
 git branch -d title/branch_purpose        # local
