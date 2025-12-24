@@ -30,7 +30,7 @@ git push
 git branch
 
 # Create a new branch
-git checkout -b feature/my-feature
+git checkout -b title/branch_purpose
 git checkout -b backend/complete_local_version
 
 # Stage changes
@@ -40,20 +40,21 @@ git add .
 git commit -m "Descriptive commit message"
 
 # Push branch to remote
-git push -u origin feature/my-feature
+git push -u origin title/branch_purpose
+git push -u origin backend/complete_local_version
 
 # Switch between branches
 git checkout main
-git checkout feature/my-feature
+git checkout title/branch_purpose
 
 # Merge branch into main
 git checkout main
 git pull                  # ensure main is up-to-date
-git merge feature/my-feature
+git merge title/branch_purpose
 
 # Delete branch (optional)
-git branch -d feature/my-feature        # local
-git push origin --delete feature/my-feature  # remote
+git branch -d title/branch_purpose        # local
+git push origin --delete title/branch_purpose  # remote
 
 # Useful commands
 git status                      # View changes
