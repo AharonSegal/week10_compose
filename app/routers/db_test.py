@@ -2,10 +2,12 @@ from fastapi import APIRouter
 from mysql.connector import Error as MySQLError
 from app.data.db_use import get_connection
 
-router = APIRouter(
-    prefix="/test",
-    tags=["DB Test"]
-)
+router = APIRouter(prefix="/test",tags=["DB Test"])
+
+#api util test
+@router.get("/health", status_code=201)
+def health():
+    return {"status": "ok"}
 
 @router.get("/db")
 def test_db_connection():

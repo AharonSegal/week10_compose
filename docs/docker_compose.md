@@ -23,7 +23,6 @@ python -c "import uvicorn; print(uvicorn.__version__)"
 python -c "import requests; print(requests.__version__)"
 python -c "import mysql.connector; print(mysql.connector.__version__)"
 
-
 pip freeze > requirements.txt
 git add .  
 git commit -m "initial commit"
@@ -77,6 +76,119 @@ volume    → persistent
                                                     
 
 # 🐳 Docker Compose File Syntax Cheat Sheet
+version: "3.9"  # Compose file version
+
+# ===================================================
+# Volumes: persistent data storage for databases
+# ===================================================
+volumes:
+  mysql_data:   # Named volume for MySQL data
+    driver: local
+
+# ===================================================
+# Networks: define isolated network for services
+# ===================================================
+networks:
+  app-network:
+    driver: bridge
+
+# ===================================================
+# Services: define containers
+# ===================================================
+services:
+
+  # -------------------- MySQL Database --------------------
+  database:
+    image: mysql:8                      # Use official MySQL 8 image
+    container_name: mysql_db
+    restart: unless-stopped             # Restart automatically unless stopped manually
+
+    # -------------------- Environment variables --------------------
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ROOT_PASS}  # Root password
+      MYSQL_DATABASE: ${DB_NAME}         # Initial database
+      MYSQL_USER: ${DB_USER}             # Optional: additional user
+      MYSQL_PASSWORD: ${DB_PASSWORD}     # Optional: additional user password
+    env_file:                             # Alternative: load from .env file
+      - .env
+
+    # -------------------- Port mapping --------------------
+    ports:
+      - "3307:3306"   # HOST:CONTAINER mapping; 3307 on host, 3306 inside container
+
+    # -------------------- Volumes --------------------
+    volumes:
+      - mysql_data:/var/lib/mysql       # Persistent DB storage
+      - ./app/sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro  # Initialize DB
+
+    # -------------------- Healthcheck --------------------
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+    networks:
+      - app-network
+
+  # -------------------- FastAPI Backend --------------------
+  backend:
+    build:
+      context: ./app                      # Dockerfile context
+      dockerfile: Dockerfile
+    container_name: backend_api
+    restart: unless-stopped
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+    # -------------------- Environment --------------------
+    environment:
+      DB_HOST: database                     # Link to MySQL service
+      DB_PORT: 3306                         # Internal MySQL port
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    env_file:
+      - .env
+
+    # -------------------- Port mapping --------------------
+    ports:
+      - "8000:8000"   # HOST:CONTAINER; FastAPI accessible on localhost:8000
+
+    # -------------------- Dependencies --------------------
+    depends_on:
+      database:
+        condition: service_healthy       # Wait for DB to be healthy before starting
+
+    # -------------------- Volumes --------------------
+    volumes:
+      - ./app:/app                         # Mount app source code for live reload
+
+    networks:
+      - app-network
+
+  # -------------------- Optional: Adminer (DB GUI) --------------------
+  adminer:
+    image: adminer
+    container_name: adminer_gui
+    restart: unless-stopped
+    ports:
+      - "8080:8080"   # Access Adminer on localhost:8080
+    depends_on:
+      - database
+    networks:
+      - app-network
+
+# ===================================================
+# Notes:
+# 1. Use environment variables via .env for sensitive info
+# 2. Volumes ensure database persists even if container is removed
+# 3. Healthchecks help orchestrate service dependencies
+# 4. Mounting ./app allows live reload during development
+# 5. `depends_on` ensures proper startup order
+# 6. Adminer is optional, helpful for GUI DB management
+# 7. Use `docker-compose up --build` to rebuild images after changes
+# ===================================================
 
 ---
 

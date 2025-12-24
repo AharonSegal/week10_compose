@@ -13,3 +13,5 @@
 ⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸⫷⫸
 
 🐞
+
+git commit -m"MAJOR STEP: backend and db connected - backend running locally with db volume -db test route working - contact endpoint schemas and skeletons are ready"

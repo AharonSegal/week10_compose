@@ -19,6 +19,11 @@ docker system df -v
 ### **2️⃣ Build / Start**
 ```bash
 docker-compose up -d --build
+
+uvicorn main:app --reload
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8090
+
+http://127.0.0.1:8000/docs#/
 ```
 ### **3️⃣ Clear / Cleanup**
 ```bash
