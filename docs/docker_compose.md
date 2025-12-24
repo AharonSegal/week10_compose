@@ -17,11 +17,13 @@ python.exe -m pip install --upgrade pip
 pip install fastapi uvicorn pydantic
 pip install requests
 pip install --upgrade mysql-connector-python
+pip install python-dotenv
 
 python -c "import fastapi; print(fastapi.__version__)"
 python -c "import uvicorn; print(uvicorn.__version__)"
 python -c "import requests; print(requests.__version__)"
 python -c "import mysql.connector; print(mysql.connector.__version__)"
+python -c "import importlib.metadata as m; print(m.version('python-dotenv'))"
 
 pip freeze > requirements.txt
 git add .  
