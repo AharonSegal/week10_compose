@@ -2,6 +2,9 @@ from typing import List
 from data.db_use import get_connection
 
 
+# ------------------------
+# Contact Model Class
+# ------------------------
 class Contact:
     def __init__(self, id: int, first_name: str, last_name: str, phone_number: str):
         self.id = id
@@ -18,6 +21,9 @@ class Contact:
         }
 
 
+# ------------------------
+# CRUD Functions
+# ------------------------
 def create_contact(first_name: str, last_name: str, phone_number: str) -> int:
     conn = get_connection()
     cursor = conn.cursor()
@@ -33,6 +39,16 @@ def create_contact(first_name: str, last_name: str, phone_number: str) -> int:
         cursor.close()
         conn.close()
 
+def db_get_contact(contact_id: int) -> dict | None:
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True) 
+    try:
+        cursor.execute("SELECT id, first_name, last_name, phone_number FROM contacts WHERE id=%s", (contact_id,))
+        row = cursor.fetchone()
+        return row  
+    finally:
+        cursor.close()
+        conn.close()
 
 def get_all_contacts() -> List[Contact]:
     conn = get_connection()
@@ -40,7 +56,7 @@ def get_all_contacts() -> List[Contact]:
     try:
         cursor.execute("SELECT id, first_name, last_name, phone_number FROM contacts")
         rows = cursor.fetchall()
-        # rows is a list of dicts like {"id": 1, "first_name": "...", ...}
+        # Convert each row dict into a Contact object
         return [
             Contact(
                 id=row["id"],
@@ -70,7 +86,6 @@ def update_contact(contact_id: int, first_name: str, last_name: str, phone_numbe
         cursor.close()
         conn.close()
 
-
 def delete_contact(contact_id: int) -> bool:
     conn = get_connection()
     cursor = conn.cursor()
@@ -81,3 +96,4 @@ def delete_contact(contact_id: int) -> bool:
     finally:
         cursor.close()
         conn.close()
+

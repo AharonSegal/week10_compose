@@ -18,3 +18,4 @@ git commit -m"MAJOR STEP: backend and db connected - backend running locally wit
 git commit -m"Major step: backend enpoints working and connected to the db using env"
 git commit -m"all works"
 
+→
