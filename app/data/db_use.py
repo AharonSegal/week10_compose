@@ -14,6 +14,8 @@ docker exec -it mysql_db mysql -uroot -ppass -e "USE contacts_db; SELECT * FROM 
 ROOT_PASS = os.getenv("ROOT_PASS")
 DB_NAME   = os.getenv("DB_NAME")
 DB_USER = os.getenv("DB_USER")
+API_PORT = int(os.getenv("API_PORT"))
+HOST_DB = os.getenv("HOST_DB")
 
 def get_connection():
     # DEBUG: this will show in your FastAPI log
@@ -24,8 +26,8 @@ def get_connection():
     )
 
     return mysql.connector.connect(
-        host="127.0.0.1",  
-        port=3307,          
+        host=HOST_DB,  
+        port=API_PORT,          
         user=DB_USER,        
         password=ROOT_PASS, 
         database=DB_NAME

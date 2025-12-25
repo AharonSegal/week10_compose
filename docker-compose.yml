@@ -7,8 +7,9 @@ services:
     container_name: mysql_db
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${ROOT_PASS}   
-      MYSQL_DATABASE: ${DB_NAME}          
+      MYSQL_ROOT_PASSWORD: ${ROOT_PASS}     
+    env_file:
+      - .env       
     ports:
       - "3307:3306"                
     volumes:
@@ -28,10 +29,8 @@ services:
     build: ./app
     container_name: contacts_api
     restart: unless-stopped
-    environment:
-      ROOT_PASS: ${ROOT_PASS}       
-      DB_NAME: ${DB_NAME}
-      API_PORT: ${API_PORT}         
+    env_file:
+      - .env        
     depends_on:
       db:
         condition: service_healthy
